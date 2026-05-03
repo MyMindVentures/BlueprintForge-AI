@@ -51,6 +51,7 @@ const ArchitectWorkspace: React.FC = () => {
   ];
 
   const currentObj = objects.find(o => o.id === selectedObject) || objects[0];
+  const [logicScore, setLogicScore] = useState(88);
 
   const publishingSteps = [
     { label: 'STRUCTURAL INTEGRITY CHECK', icon: Shield, color: 'text-accent-cyan' },
@@ -102,6 +103,7 @@ const ArchitectWorkspace: React.FC = () => {
         text: `Analyzing architectural implications for "${userMsg}"... Generating object modules and relationship hashes.` 
       }]);
       setIsAnalyzing(false);
+      setLogicScore(prev => Math.min(prev + 2, 99.8));
     }, 1500);
   };
 
@@ -344,9 +346,39 @@ const ArchitectWorkspace: React.FC = () => {
                  </div>
                  <Sparkles className="w-4 h-4 text-accent-amber" />
               </div>
-              <div className="flex-1 overflow-y-auto p-5 space-y-6 no-scrollbar">
+              <div className="flex-1 overflow-y-auto p-5 space-y-6 no-scrollbar relative">
+                 {/* Decorative Neural Map */}
+                 <div className="absolute inset-0 pointer-events-none opacity-[0.03] p-10 overflow-hidden">
+                    <svg className="w-full h-full" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <motion.path 
+                        d="M10,50 Q25,25 50,50 T90,50" 
+                        stroke="currentColor" 
+                        strokeWidth="0.5"
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                      />
+                      <motion.circle 
+                        cx="50" cy="50" r="1" fill="currentColor"
+                        animate={{ r: [1, 2, 1] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                      <motion.path 
+                        d="M50,10 V90 M10,50 H90" 
+                        stroke="currentColor" 
+                        strokeWidth="0.1"
+                      />
+                    </svg>
+                 </div>
+
                  {messages.map((m, i) => (
-                   <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                   <motion.div 
+                    key={i} 
+                    initial={{ opacity: 0, x: m.role === 'user' ? 20 : -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    className={`flex relative z-10 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                   >
                       <div className={`max-w-[90%] p-4 rounded-2xl text-xs leading-relaxed shadow-lg ${
                         m.role === 'user' 
                         ? 'bg-accent-blue text-white rounded-tr-none' 
@@ -354,7 +386,7 @@ const ArchitectWorkspace: React.FC = () => {
                       }`}>
                         {m.text}
                       </div>
-                   </div>
+                   </motion.div>
                  ))}
                  {isAnalyzing && (
                    <div className="flex justify-start">
@@ -404,6 +436,20 @@ const ArchitectWorkspace: React.FC = () => {
                       <span className="text-[11px] font-black font-mono text-text-primary">{item.val}</span>
                    </div>
                  ))}
+                 <div className="pt-4 mt-2 border-t border-white/5 space-y-4">
+                    <div className="flex justify-between items-center px-1">
+                       <span className="text-[9px] font-black uppercase text-accent-cyan tracking-widest animate-pulse">Logic Consistency Score</span>
+                       <span className="text-xl font-black text-text-primary font-mono">{logicScore.toFixed(1)}%</span>
+                    </div>
+                    <div className="h-1.5 bg-bg-surface border border-border-soft rounded-full overflow-hidden">
+                       <motion.div 
+                         className="h-full bg-gradient-to-r from-accent-blue via-accent-cyan to-accent-emerald"
+                         initial={{ width: 0 }}
+                         animate={{ width: `${logicScore}%` }}
+                         transition={{ duration: 1, ease: "circOut" }}
+                        />
+                    </div>
+                 </div>
               </div>
            </div>
         </div>

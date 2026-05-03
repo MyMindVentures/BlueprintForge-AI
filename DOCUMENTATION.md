@@ -10,6 +10,7 @@
 6. Data Model Highlights
 7. Build Phases
 8. Global Rules
+9. [AGENTS.md](./AGENTS.md) - Agent & Vibecoder Instructions
 
 ---
 

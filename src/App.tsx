@@ -38,6 +38,50 @@ import RevenueProof from './views/RevenueProof';
 
 // --- Components ---
 
+const AmbientBackground = () => (
+  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-accent-blue/10 blur-[120px] rounded-full animate-pulse" />
+    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-violet/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+    <div 
+      className="absolute inset-0 opacity-[0.03]" 
+      style={{ 
+        backgroundImage: 'radial-gradient(#ffffff 0.5px, transparent 0.5px)', 
+        backgroundSize: '32px 32px' 
+      }} 
+    />
+  </div>
+);
+
+const CustomCursor = () => {
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  const [isPointer, setIsPointer] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+      const target = e.target as HTMLElement;
+      setIsPointer(window.getComputedStyle(target).cursor === 'pointer');
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed top-0 left-0 w-6 h-6 rounded-full border border-accent-blue/30 pointer-events-none z-[9999] hidden lg:block"
+      animate={{
+        x: position.x - 12,
+        y: position.y - 12,
+        scale: isPointer ? 1.5 : 1,
+        backgroundColor: isPointer ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0)',
+      }}
+      transition={{ type: 'spring', damping: 30, stiffness: 400, mass: 0.5 }}
+    >
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-accent-blue rounded-full" />
+    </motion.div>
+  );
+};
+
 const Sidebar = ({ currentView, setView, userRole, setUserRole }: { currentView: string, setView: (v: string) => void, userRole: Role, setUserRole: (r: Role) => void }) => {
   const groups = [
     { 
@@ -183,10 +227,12 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-bg-main text-text-primary font-sans selection:bg-accent-blue selection:text-white overflow-hidden">
+    <div className="flex h-screen bg-bg-main text-text-primary font-sans selection:bg-accent-blue selection:text-white overflow-hidden relative">
+      <AmbientBackground />
+      <CustomCursor />
       <Sidebar currentView={view} setView={setView} userRole={role} setUserRole={setRole} />
       
-      <main className="flex-1 overflow-hidden relative flex flex-col">
+      <main className="flex-1 overflow-hidden relative flex flex-col z-10">
         {/* Top Command Bar */}
         <div className="h-20 border-b border-border-soft bg-bg-main/50 backdrop-blur-xl flex items-center justify-between px-10 z-40">
            <div className="flex items-center gap-4 flex-1">

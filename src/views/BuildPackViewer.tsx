@@ -266,8 +266,28 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
               key="code"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="h-full bg-bg-main border border-border-soft rounded-[2.5rem] p-12 font-mono text-xs overflow-y-auto no-scrollbar space-y-8 relative shadow-2xl group"
+              className="h-full bg-bg-main border border-border-soft rounded-[2.5rem] p-12 font-mono text-xs overflow-y-auto no-scrollbar space-y-8 relative shadow-2xl group overflow-hidden"
             >
+               {/* Matrix Background Decoration */}
+               <div className="absolute inset-0 pointer-events-none opacity-[0.04] p-4 flex flex-wrap gap-4 overflow-hidden">
+                  {Array.from({ length: 20 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ y: -100, opacity: 0 }}
+                      animate={{ y: [0, 600], opacity: [0, 1, 0] }}
+                      transition={{ 
+                        duration: Math.random() * 5 + 5, 
+                        repeat: Infinity, 
+                        ease: "linear",
+                        delay: Math.random() * 5 
+                      }}
+                      className="text-[10px] whitespace-pre"
+                    >
+                      {Array.from({ length: 15 }).map(() => String.fromCharCode(Math.floor(Math.random() * 26) + 65)).join('\n')}
+                    </motion.div>
+                  ))}
+               </div>
+
                <div className="absolute top-10 right-12 flex gap-3 relative z-20">
                   <button 
                     onClick={handleSync}
