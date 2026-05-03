@@ -107,7 +107,7 @@ Use these milestones in GitHub Issues.
 
 ### M4 — AI Product Architect Workspace
 
-**Goal:** Build the workspace where raw app ideas become structured product documentation.
+**Goal:** Build the workspace where raw app ideas become structured product documentation and VibeOps context mutations.
 
 **Includes:**
 
@@ -118,18 +118,22 @@ Use these milestones in GitHub Issues.
 - template selector
 - generation states
 - validation preview
+- Vibe Input Processing
+- context mutation explanation
+- fallback parsing behavior
 
 **Definition of done:**
 
 - User can enter a raw idea.
 - App can show a generated architecture preview using mock or real AI output.
 - Flow communicates idea-to-structure clearly.
+- Input is framed as project memory mutation, not just chat.
 
 ---
 
 ### M5 — Object Documentation Canvas
 
-**Goal:** Build the structured object-based documentation editor.
+**Goal:** Build the structured object-based documentation editor and living project memory view.
 
 **Includes:**
 
@@ -141,17 +145,22 @@ Use these milestones in GitHub Issues.
 - validation issue markers
 - section lock placeholder
 - regenerate section placeholder
+- living source of truth view
+- context diff preview
+- conflict review placeholder
+- version snapshot preview
 
 **Definition of done:**
 
 - Product documentation can be viewed in compact object structure.
 - Builder can understand how screens, roles, capabilities, AI, and business rules connect.
+- Context changes can be inspected instead of silently overwritten.
 
 ---
 
 ### M6 — Builder Build Pack
 
-**Goal:** Give builders perfect build-ready documentation.
+**Goal:** Give builders perfect build-ready documentation and agent-ready instructions.
 
 **Includes:**
 
@@ -164,11 +173,15 @@ Use these milestones in GitHub Issues.
 - AI coding agent prompt
 - milestone list
 - protected notes placeholder
+- build instruction generator
+- review checklist
+- agent task creation placeholder
 
 **Definition of done:**
 
 - Builder can see enough structured information to understand how to build the app.
 - Build Pack feels developer-ready and professional.
+- Build instructions include acceptance criteria and review checklist.
 
 ---
 
@@ -257,12 +270,23 @@ Use these milestones in GitHub Issues.
 - bids
 - access logs
 - exports
+- ProjectMemory
+- ProjectEvent
+- ContextMutation
+- PipelineState
+- BuildInstruction
+- AgentTask
+- CommitReference
+- PullRequestReference
+- ReviewOutcome
+- VersionSnapshot
 
 **Definition of done:**
 
 - Core data is persisted.
 - User roles are enforced.
 - App can support real creator/builder collaboration basics.
+- VibeOps project memory and delivery models exist in the data architecture.
 
 ---
 
@@ -291,6 +315,36 @@ Use these milestones in GitHub Issues.
 
 ---
 
+### M12 — VibeOps Build Orchestration Layer
+
+**Goal:** Implement the VibeOps delivery layer inside BlueprintForge AI so project memory can become trackable build execution.
+
+**Includes:**
+
+- Project Memory Engine
+- Vibe Input Processing
+- Context Diff & Conflict Review
+- 00–16 Top AI Pipeline
+- Build Instruction Generator
+- Agent Task Board
+- manual provider workflow
+- commits and PR references
+- task review outcomes
+- delivery timeline events
+- version history
+- timezone handling
+- fallback/demo stability
+
+**Definition of done:**
+
+- Every important user input is treated as a context mutation.
+- Project memory can be inspected as a living source of truth.
+- Build instructions can become trackable agent tasks.
+- Tasks can connect to commits, PRs, review notes, and delivery events.
+- Manual provider flow works even before external coding-agent integrations are ready.
+
+---
+
 ## Suggested GitHub milestone creation order
 
 1. M0 — Repo & Community Foundation
@@ -305,6 +359,7 @@ Use these milestones in GitHub Issues.
 10. M9 — Competitive Intelligence & Protected Evidence
 11. M10 — Backend, Auth & Persistence
 12. M11 — Production Readiness
+13. M12 — VibeOps Build Orchestration Layer
 
 ---
 
@@ -331,3 +386,20 @@ Current issues:
 - Issue #3 Creator/Builder Directory → M2 — Creator & Builder Profiles
 - Issue #4 Get BlueprintForge AI online → M1 — Premium UI Shell & Online Launch
 - Issue #5 Daily Challenge Feed → M3 — Daily Challenge System
+- Issue #6 Create GitHub milestones → M0 — Repo & Community Foundation
+- Issue #7 Integrate VibeOps → M12 — VibeOps Build Orchestration Layer
+
+Planned issues created from this milestone system should use labels that match their milestone, for example:
+
+- `milestone-m1`
+- `milestone-m2`
+- `milestone-m3`
+- `milestone-m4`
+- `milestone-m5`
+- `milestone-m6`
+- `milestone-m7`
+- `milestone-m8`
+- `milestone-m9`
+- `milestone-m10`
+- `milestone-m11`
+- `milestone-m12`
