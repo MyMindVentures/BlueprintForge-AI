@@ -3,11 +3,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
-import { Search, Globe, TrendingUp, AlertCircle, CheckCircle2, Star, Target, Cpu, Binary } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Search, Globe, TrendingUp, AlertCircle, CheckCircle2, Star, Target, Cpu, Binary, RefreshCw } from 'lucide-react';
 
 const CompetitiveIntelligence: React.FC = () => {
+  const [isSweeping, setIsSweeping] = useState(false);
+  const [sweepProgress, setSweepProgress] = useState(0);
+
+  const startSweep = () => {
+    setIsSweeping(true);
+    setSweepProgress(0);
+    const interval = setInterval(() => {
+      setSweepProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setIsSweeping(false), 500);
+          return 100;
+        }
+        return p + 5;
+      });
+    }, 100);
+  };
+
   const scans = [
     { 
       target: 'NichePro SaaS Architect', 
@@ -38,9 +56,28 @@ const CompetitiveIntelligence: React.FC = () => {
           <h1 className="text-4xl font-black tracking-tighter mb-2 text-text-primary font-serif italic leading-tight">Market Gap Analysis</h1>
           <p className="text-text-muted text-lg max-w-2xl font-serif italic">Cross-referencing blueprint DNA against global market solutions to ensure maximum differentiation.</p>
         </div>
-        <button className="px-6 py-3.5 bg-accent-blue text-white text-[10px] font-black tracking-widest uppercase rounded-2xl flex items-center gap-3 hover:bg-accent-blue/90 transition-all shadow-xl shadow-accent-blue/20 active:scale-95">
-           <Search className="w-4.5 h-4.5" /> INITIATE SWEEP
-        </button>
+        <div className="flex items-center gap-6">
+          {isSweeping && (
+            <div className="flex flex-col items-end gap-2 pr-6 border-r border-white/10">
+               <span className="text-[9px] font-black text-accent-cyan uppercase tracking-widest animate-pulse">Scanning Global Nodes...</span>
+               <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden">
+                  <motion.div 
+                    className="h-full bg-accent-cyan" 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${sweepProgress}%` }}
+                  />
+               </div>
+            </div>
+          )}
+          <button 
+            onClick={startSweep}
+            disabled={isSweeping}
+            className="px-6 py-3.5 bg-accent-blue text-white text-[10px] font-black tracking-widest uppercase rounded-2xl flex items-center gap-3 hover:bg-accent-blue/90 transition-all shadow-xl shadow-accent-blue/20 active:scale-95 disabled:opacity-50"
+          >
+            {isSweeping ? <RefreshCw className="w-4.5 h-4.5 animate-spin" /> : <Search className="w-4.5 h-4.5" />}
+            {isSweeping ? `SYNCHRONIZING ${sweepProgress}%` : 'INITIATE SWEEP'}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">

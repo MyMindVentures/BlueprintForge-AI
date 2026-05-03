@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   BadgeCheck, 
   TrendingUp, 
@@ -15,10 +15,22 @@ import {
   ExternalLink,
   Lock,
   Activity,
-  Variable
+  Variable,
+  RefreshCw
 } from 'lucide-react';
 
 const RevenueProof: React.FC = () => {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showCert, setShowCert] = useState(false);
+
+  const handleGenerate = () => {
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      setShowCert(true);
+    }, 2000);
+  };
+
   const verifiedStats = [
     { label: 'Total Gross Volume', value: '$42,500', icon: DollarSign, trend: '+12.5%', trendDesc: 'vs last sweep' },
     { label: 'Verified Partners', value: '08', icon: ShieldCheck, trend: '+02', trendDesc: 'pending audit' },
@@ -38,8 +50,13 @@ const RevenueProof: React.FC = () => {
         </div>
         <div className="flex gap-3">
            <button className="px-5 py-3 bg-bg-surface border border-border-soft text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-text-primary hover:border-white/20 transition-all rounded-xl shadow-xl active:scale-95">EXPORT AUDIT JSON</button>
-           <button className="px-6 py-3 bg-accent-emerald text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center gap-3 hover:bg-accent-emerald/90 transition-all active:scale-95">
-             <BadgeCheck className="w-4.5 h-4.5" /> GENERATE PROOF CERT
+           <button 
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="px-6 py-3 bg-accent-emerald text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center gap-3 hover:bg-accent-emerald/90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+           >
+             {isGenerating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <BadgeCheck className="w-4.5 h-4.5" />}
+             {isGenerating ? 'VERIFYING...' : 'GENERATE PROOF CERT'}
            </button>
         </div>
       </div>
@@ -136,6 +153,50 @@ const RevenueProof: React.FC = () => {
             </div>
          </div>
       </div>
+      <AnimatePresence>
+        {showCert && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-bg-main/90 backdrop-blur-3xl">
+            <motion.div 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full max-w-2xl bg-bg-surface border border-border-soft rounded-[3rem] p-12 text-center space-y-10 shadow-2xl relative overflow-hidden"
+            >
+               <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
+                  <BadgeCheck className="w-96 h-96 text-accent-emerald" />
+               </div>
+               
+               <div className="space-y-6 relative z-10">
+                  <div className="w-24 h-24 bg-accent-emerald/20 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(16,185,129,0.2)]">
+                     <ShieldCheck className="w-12 h-12 text-accent-emerald" />
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-5xl font-black italic font-serif text-text-primary tracking-tighter uppercase leading-none">Proof Certified</h2>
+                    <p className="text-text-muted text-[10px] uppercase tracking-[0.4em] font-black">Ledger Hash: 0x992...F9A1 / BLOCK: 18,294,002</p>
+                  </div>
+               </div>
+
+               <div className="p-8 bg-bg-surface-elevated border border-border-soft rounded-[2rem] shadow-inner font-serif italic text-text-secondary leading-relaxed">
+                  "Your architectural revenue proof has been validated against global exchange nodes and signed by the Architect Consensus Layer. This certificate can be used for participation bid prioritization."
+               </div>
+
+               <div className="flex flex-col gap-4 relative z-10">
+                  <button 
+                    onClick={() => setShowCert(false)}
+                    className="w-full py-5 bg-text-primary text-bg-main text-xs font-black rounded-2xl shadow-xl hover:bg-text-secondary transition-all uppercase tracking-widest active:scale-95"
+                  >
+                    DOWNLOAD SIGNED CERTIFICATE
+                  </button>
+                  <button 
+                    onClick={() => setShowCert(false)}
+                    className="w-full py-5 bg-bg-surface border border-border-soft text-text-muted text-[10px] font-black rounded-2xl hover:text-text-primary hover:border-white/20 transition-all uppercase tracking-widest"
+                  >
+                    CLOSE VAULT
+                  </button>
+               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

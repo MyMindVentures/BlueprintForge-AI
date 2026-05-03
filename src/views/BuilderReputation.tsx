@@ -3,11 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Star, Trophy, Clock, Code2, ShieldCheck, ExternalLink, Activity, Target } from 'lucide-react';
 
 const BuilderReputation: React.FC = () => {
+  const [sortBy, setSortBy] = useState<'velocity' | 'rating'>('velocity');
+
   const builders = [
     {
       id: 'b1',
@@ -41,6 +43,8 @@ const BuilderReputation: React.FC = () => {
     }
   ];
 
+  const sortedBuilders = [...builders].sort((a, b) => b[sortBy] - a[sortBy]);
+
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
       <div className="flex justify-between items-center bg-bg-surface border border-border-soft p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
@@ -58,13 +62,23 @@ const BuilderReputation: React.FC = () => {
         </div>
 
         <div className="relative z-10 flex gap-2 bg-bg-surface-elevated p-1.5 border border-border-soft rounded-2xl shadow-inner">
-           <button className="px-5 py-2 bg-bg-surface shadow-xl border border-border-soft text-[10px] font-black uppercase tracking-widest text-accent-blue rounded-xl">By Velocity</button>
-           <button className="px-5 py-2 text-[10px] font-black uppercase tracking-widest text-text-muted hover:text-text-primary transition-all">By Rating</button>
+           <button 
+            onClick={() => setSortBy('velocity')}
+            className={`px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${sortBy === 'velocity' ? 'bg-bg-surface shadow-xl border border-border-soft text-accent-blue' : 'text-text-muted hover:text-text-primary'}`}
+           >
+             By Velocity
+           </button>
+           <button 
+            onClick={() => setSortBy('rating')}
+            className={`px-5 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${sortBy === 'rating' ? 'bg-bg-surface shadow-xl border border-border-soft text-accent-blue' : 'text-text-muted hover:text-text-primary'}`}
+           >
+             By Rating
+           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6">
-         {builders.map((builder, i) => (
+         {sortedBuilders.map((builder, i) => (
            <motion.div 
             key={builder.id} 
             initial={{ opacity: 0, y: 20 }}

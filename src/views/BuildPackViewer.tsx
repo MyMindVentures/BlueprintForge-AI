@@ -22,12 +22,17 @@ import {
   Rocket,
   Binary,
   Cpu,
-  Variable
+  Variable,
+  RefreshCw
 } from 'lucide-react';
 
 const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }) => {
   const [activeTab, setActiveTab] = useState<'docs' | 'tasks' | 'code'>('docs');
-
+  const [isExporting, setIsExporting] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncVersion, setSyncVersion] = useState('v4.0.2');
+  const [syncTime, setSyncTime] = useState('2 mins ago');
+  
   const documentationSections = [
     { 
       id: 'obj-map', 
@@ -51,13 +56,37 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
       content: `[RULE-001] Data must be encrypted at rest.\n[RULE-002] Multi-tenant isolation at DB layer.`
     }
   ];
+  
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Define Firebase Schema for [OBJ-003]', status: 'DONE' as const, priority: 'CRITICAL' },
+    { id: 2, title: 'Implement [OBJ-001] Front-end Interface', status: 'IN_PROGRESS' as const, priority: 'HIGH' },
+    { id: 3, title: 'Setup Stripe Recoupment Webhooks', status: 'TODO' as const, priority: 'MEDIUM' },
+    { id: 4, title: 'Generate AI Coding Prompt for [OBJ-002]', status: 'TODO' as const, priority: 'HIGH' },
+  ]);
 
-  const tasks = [
-    { title: 'Define Firebase Schema for [OBJ-003]', status: 'DONE', priority: 'CRITICAL' },
-    { title: 'Implement [OBJ-001] Front-end Interface', status: 'IN_PROGRESS', priority: 'HIGH' },
-    { title: 'Setup Stripe Recoupment Webhooks', status: 'TODO', priority: 'MEDIUM' },
-    { title: 'Generate AI Coding Prompt for [OBJ-002]', status: 'TODO', priority: 'HIGH' },
-  ];
+  const toggleTask = (id: number) => {
+    setTasks(prev => prev.map(t => {
+      if (t.id === id) {
+        const nextStatus = t.status === 'DONE' ? 'TODO' : t.status === 'TODO' ? 'IN_PROGRESS' : 'DONE';
+        return { ...t, status: nextStatus };
+      }
+      return t;
+    }));
+  };
+
+  const handleExport = () => {
+    setIsExporting(true);
+    setTimeout(() => setIsExporting(false), 2000);
+  };
+
+  const handleSync = () => {
+    setIsSyncing(true);
+    setTimeout(() => {
+      setIsSyncing(false);
+      setSyncVersion(`v4.0.${Math.floor(Math.random() * 20)}`);
+      setSyncTime('seconds ago');
+    }, 1500);
+  };
 
   return (
     <div className="h-full flex flex-col gap-6 animate-in fade-in duration-700">
@@ -89,8 +118,13 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
               <Lock className="w-3.5 h-3.5 text-accent-emerald" />
               <span className="text-[10px] font-black text-accent-emerald uppercase tracking-widest leading-none">Verified Access</span>
            </div>
-           <button className="px-5 py-2.5 bg-text-primary text-bg-main text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-text-secondary transition-all shadow-lg shadow-white/5 flex items-center gap-2 active:scale-95">
-             <Copy className="w-4 h-4" /> EXPORT AI PAYLOAD
+           <button 
+             onClick={handleExport}
+             disabled={isExporting}
+             className="px-5 py-2.5 bg-text-primary text-bg-main text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-text-secondary transition-all shadow-lg shadow-white/5 flex items-center gap-2 active:scale-95 disabled:opacity-50"
+           >
+             {isExporting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Copy className="w-4 h-4" />}
+             {isExporting ? 'ENCRYPTING PAYLOAD...' : 'EXPORT AI PAYLOAD'}
            </button>
         </div>
       </div>
@@ -160,7 +194,10 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
                        <div className="w-1.5 h-6 bg-accent-cyan rounded-full" />
                        <span className="text-text-muted text-[10px] font-black uppercase tracking-[0.4em]">Structural Definitions</span>
                     </div>
-                    <span className="text-[9px] bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg text-text-secondary font-black uppercase tracking-widest italic font-serif">Release v4.0.2</span>
+                    <div className="flex items-center gap-4">
+                       <span className="text-[9px] text-text-muted font-mono uppercase">Last sync: {syncTime}</span>
+                       <span className="text-[9px] bg-white/5 border border-white/5 px-3 py-1.5 rounded-lg text-text-secondary font-black uppercase tracking-widest italic font-serif transition-colors hover:text-accent-cyan cursor-default">{syncVersion}</span>
+                    </div>
                  </header>
                  
                  <div className="relative z-10 grid grid-cols-1 gap-12">
@@ -187,8 +224,12 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
               animate={{ opacity: 1, scale: 1 }}
               className="max-w-4xl mx-auto w-full space-y-6 pt-4 h-full overflow-y-auto no-scrollbar"
             >
-               {tasks.map((task, i) => (
-                 <div key={i} className="flex items-center gap-6 bg-bg-surface border border-border-soft p-8 rounded-3xl shadow-xl hover:border-accent-blue/30 transition-all group cursor-pointer relative overflow-hidden active:scale-95">
+               {tasks.map((task) => (
+                 <div 
+                  key={task.id} 
+                  onClick={() => toggleTask(task.id)}
+                  className="flex items-center gap-6 bg-bg-surface border border-border-soft p-8 rounded-3xl shadow-xl hover:border-accent-blue/30 transition-all group cursor-pointer relative overflow-hidden active:scale-[0.98]"
+                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-accent-blue/0 to-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                     
                     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${
@@ -228,8 +269,13 @@ const BuildPackViewer: React.FC<{ setView: (v: string) => void }> = ({ setView }
               className="h-full bg-bg-main border border-border-soft rounded-[2.5rem] p-12 font-mono text-xs overflow-y-auto no-scrollbar space-y-8 relative shadow-2xl group"
             >
                <div className="absolute top-10 right-12 flex gap-3 relative z-20">
-                  <button className="px-5 py-2.5 bg-bg-surface border border-border-soft text-text-muted font-black uppercase tracking-widest rounded-xl hover:text-text-primary hover:border-white/20 transition-all flex items-center gap-2 shadow-xl active:scale-95">
-                     <Copy className="w-4 h-4" /> RE-SYNC ARCHITECTURE
+                  <button 
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="px-5 py-2.5 bg-bg-surface border border-border-soft text-text-muted font-black uppercase tracking-widest rounded-xl hover:text-text-primary hover:border-white/20 transition-all flex items-center gap-2 shadow-xl active:scale-95 disabled:opacity-50"
+                  >
+                     {isSyncing ? <RefreshCw className="w-4 h-4 animate-spin text-accent-cyan" /> : <Copy className="w-4 h-4" />}
+                     {isSyncing ? 'SYNCHRONIZING...' : 'RE-SYNC ARCHITECTURE'}
                   </button>
                </div>
 

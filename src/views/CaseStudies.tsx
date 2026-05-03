@@ -3,11 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
-import { BookOpen, Users, Clock, Zap, Star, Layout, Database, ShieldCheck, ArrowRight, Binary, Globe } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { BookOpen, Users, Clock, Zap, Star, Layout, Database, ShieldCheck, ArrowRight, Binary, Globe, X, Terminal, FileCode, CheckCircle2 } from 'lucide-react';
 
 const CaseStudies: React.FC = () => {
+  const [selectedLog, setSelectedLog] = useState<number | null>(null);
+
   const cases = [
     {
       title: 'The Legal-Tech Blueprint Breakout',
@@ -145,7 +147,10 @@ const CaseStudies: React.FC = () => {
                                 <span className="text-[10px] text-text-muted font-mono uppercase tracking-widest mt-1">Audit_Hash_#4420_X</span>
                              </div>
                           </div>
-                          <button className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 text-text-muted hover:text-accent-blue transition-colors group/link">
+                          <button 
+                            onClick={() => setSelectedLog(i)}
+                            className="relative z-10 text-[10px] font-black uppercase tracking-[0.3em] flex items-center gap-3 text-text-muted hover:text-accent-blue transition-colors group/link"
+                          >
                              OPEN FULL LOG <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1.5 transition-transform" />
                           </button>
                        </div>
@@ -155,6 +160,79 @@ const CaseStudies: React.FC = () => {
            </motion.div>
          ))}
       </div>
+
+      <AnimatePresence>
+        {selectedLog !== null && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-bg-main/90 backdrop-blur-3xl">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-4xl bg-bg-surface border border-border-soft rounded-[3rem] overflow-hidden shadow-2xl flex flex-col h-[80vh]"
+            >
+               <div className="p-8 border-b border-border-soft flex items-center justify-between bg-bg-surface-elevated">
+                  <div className="flex items-center gap-6">
+                     <div className="w-12 h-12 bg-accent-blue/10 rounded-2xl flex items-center justify-center border border-accent-blue/20">
+                        <Terminal className="w-6 h-6 text-accent-blue" />
+                     </div>
+                     <div>
+                        <h2 className="text-xl font-black italic font-serif text-text-primary tracking-tight uppercase">Audit Ledger Log</h2>
+                        <p className="text-[10px] text-text-muted uppercase tracking-[0.4em] font-black">Record Sequence: #{Math.random().toString(16).slice(2, 10).toUpperCase()}</p>
+                     </div>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedLog(null)}
+                    className="w-10 h-10 bg-white/5 border border-white/5 rounded-xl flex items-center justify-center text-text-muted hover:text-text-primary transition-all active:scale-95"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+               </div>
+               
+               <div className="flex-1 overflow-y-auto p-12 space-y-12 no-scrollbar font-mono text-xs">
+                  <div className="space-y-6">
+                     <div className="flex items-center gap-4 text-accent-emerald">
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span className="uppercase tracking-[0.3em] font-black underline decoration-2">INTEGRITY_CHECK: PASSED</span>
+                     </div>
+                     <div className="bg-bg-main p-8 rounded-2xl border border-border-soft space-y-3 italic text-text-secondary leading-relaxed">
+                        <div>[2024-11-09 14:22:01] Neural handshake established with Architect node...</div>
+                        <div>[2024-11-09 14:22:05] Verifying blueprint DNA against Category: {cases[selectedLog].niche}...</div>
+                        <div>[2024-11-09 14:22:12] Resource recoupment verified at {cases[selectedLog].revenue} over {cases[selectedLog].recoupTime}...</div>
+                        <div>[2024-11-09 14:22:18] Generating final consensus hash: 0x992...F9A1</div>
+                     </div>
+                  </div>
+
+                  <div className="space-y-6">
+                     <h4 className="text-text-primary font-black uppercase tracking-[0.2em] flex items-center gap-3">
+                        <FileCode className="w-4 h-4 text-accent-cyan" />
+                        Structural Objects Audit
+                     </h4>
+                     <div className="grid grid-cols-2 gap-4">
+                        {cases[selectedLog].metrics.map(m => (
+                          <div key={m.label} className="p-6 bg-bg-surface-elevated border border-border-soft rounded-2xl">
+                             <div className="flex justify-between items-center mb-4">
+                                <span className="text-[9px] font-black text-text-muted uppercase tracking-widest">{m.label}</span>
+                                <span className="text-accent-emerald font-black">OK</span>
+                             </div>
+                             <div className="text-lg font-black text-text-primary italic font-serif tracking-tighter">SCORE: {m.score}/100</div>
+                          </div>
+                        ))}
+                     </div>
+                  </div>
+               </div>
+
+               <div className="p-8 bg-bg-surface-elevated border-t border-border-soft">
+                  <button 
+                    onClick={() => setSelectedLog(null)}
+                    className="w-full py-5 bg-accent-blue text-white text-xs font-black rounded-2xl shadow-xl hover:bg-accent-blue/90 transition-all uppercase tracking-widest active:scale-95"
+                  >
+                    CLOSE AUDIT TERMINAL
+                  </button>
+               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

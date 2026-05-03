@@ -25,6 +25,8 @@ import {
 
 const SettingsView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'export' | 'templates' | 'billing'>('profile');
+  const [useTwoFactor, setUseTwoFactor] = useState(true);
+  const [useIntelligence, setUseIntelligence] = useState(true);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -118,32 +120,38 @@ const SettingsView: React.FC = () => {
 
                    <div className="space-y-5">
                       <h4 className="text-[10px] font-bold text-text-muted uppercase tracking-[0.3em] border-b border-white/5 pb-3">Security Protocols</h4>
-                      <div className="flex items-center justify-between p-6 bg-bg-main rounded-2xl border border-border-soft group cursor-pointer hover:border-accent-cyan/30 transition-all shadow-inner">
+                      <div 
+                        onClick={() => setUseTwoFactor(!useTwoFactor)}
+                        className="flex items-center justify-between p-6 bg-bg-main rounded-2xl border border-border-soft group cursor-pointer hover:border-accent-cyan/30 transition-all shadow-inner"
+                      >
                          <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-accent-cyan/10 rounded-xl flex items-center justify-center text-accent-cyan border border-accent-cyan/20">
                                <Shield className="w-5 h-5" />
                             </div>
                             <div>
                                <span className="text-sm font-black text-text-primary uppercase tracking-widest">Two-Factor Encryption Pulse</span>
-                               <p className="text-[10px] text-text-muted mt-1 font-mono italic">Enabled via Hardware Security Key</p>
+                               <p className="text-[10px] text-text-muted mt-1 font-mono italic">{useTwoFactor ? 'Enabled' : 'Disabled'} via Hardware Security Key</p>
                             </div>
                          </div>
-                         <div className="w-12 h-6 bg-accent-cyan/20 border border-accent-cyan/30 rounded-full relative p-1 cursor-pointer">
-                            <div className="w-4 h-4 bg-accent-cyan rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)] ml-auto" />
+                         <div className={`w-12 h-6 border rounded-full relative p-1 transition-all ${useTwoFactor ? 'bg-accent-cyan/20 border-accent-cyan/30' : 'bg-white/5 border-white/10'}`}>
+                            <div className={`w-4 h-4 rounded-full transition-all ${useTwoFactor ? 'bg-accent-cyan shadow-[0_0_8px_rgba(34,211,238,0.8)] ml-auto' : 'bg-text-muted ml-0'}`} />
                          </div>
                       </div>
-                      <div className="flex items-center justify-between p-6 bg-bg-main rounded-2xl border border-border-soft group cursor-pointer hover:border-accent-blue/30 transition-all shadow-inner">
+                      <div 
+                        onClick={() => setUseIntelligence(!useIntelligence)}
+                        className="flex items-center justify-between p-6 bg-bg-main rounded-2xl border border-border-soft group cursor-pointer hover:border-accent-blue/30 transition-all shadow-inner"
+                      >
                          <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-accent-blue/10 rounded-xl flex items-center justify-center text-accent-blue border border-accent-blue/20">
                                <Bell className="w-5 h-5" />
                             </div>
                             <div>
                                <span className="text-sm font-black text-text-primary uppercase tracking-widest">Real-time Bid Intelligence</span>
-                               <p className="text-[10px] text-text-muted mt-1 font-mono italic">Active for high-value bids {'>'} $10,000</p>
+                               <p className="text-[10px] text-text-muted mt-1 font-mono italic">{useIntelligence ? 'Active' : 'Inactive'} for high-value bids {'>'} $10,000</p>
                             </div>
                          </div>
-                         <div className="w-12 h-6 bg-accent-blue/20 border border-accent-blue/30 rounded-full relative p-1 cursor-pointer">
-                            <div className="w-4 h-4 bg-accent-blue rounded-full shadow-[0_0_8px_rgba(59,130,246,0.8)] ml-auto" />
+                         <div className={`w-12 h-6 border rounded-full relative p-1 transition-all ${useIntelligence ? 'bg-accent-blue/20 border-accent-blue/30' : 'bg-white/5 border-white/10'}`}>
+                            <div className={`w-4 h-4 rounded-full transition-all ${useIntelligence ? 'bg-accent-blue shadow-[0_0_8px_rgba(59,130,246,0.8)] ml-auto' : 'bg-text-muted ml-0'}`} />
                          </div>
                       </div>
                    </div>

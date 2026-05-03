@@ -38,7 +38,7 @@ import RevenueProof from './views/RevenueProof';
 
 // --- Components ---
 
-const Sidebar = ({ currentView, setView, userRole }: { currentView: string, setView: (v: string) => void, userRole: Role }) => {
+const Sidebar = ({ currentView, setView, userRole, setUserRole }: { currentView: string, setView: (v: string) => void, userRole: Role, setUserRole: (r: Role) => void }) => {
   const groups = [
     { 
       title: 'Command Center', 
@@ -115,13 +115,40 @@ const Sidebar = ({ currentView, setView, userRole }: { currentView: string, setV
         })}
       </div>
 
-      <div className="mt-6 pt-6 border-t border-border-soft">
+      <div className="mt-6 pt-6 border-t border-border-soft space-y-4">
+        <div className="p-4 bg-bg-surface-elevated rounded-2xl border border-border-soft group/dev">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[8px] font-black text-text-muted uppercase tracking-[0.2em]">Active Archetype</span>
+            <div className="w-1.5 h-1.5 bg-accent-blue rounded-full animate-pulse" />
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-accent-blue/10 flex items-center justify-center">
+              <BadgeCheck className="w-4 h-4 text-accent-blue" />
+            </div>
+            <span className="text-[10px] font-black text-text-primary tracking-widest uppercase">{userRole}</span>
+          </div>
+          
+          <div className="hidden group-hover/dev:grid grid-cols-2 gap-2 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
+            {['VISITOR', 'CREATOR', 'BUILDER', 'COMPANY'].map(role => (
+              <button
+                key={role}
+                onClick={() => setUserRole(role as Role)}
+                className={`px-2 py-1.5 rounded-lg text-[7px] font-black border transition-all ${
+                  userRole === role ? 'bg-accent-blue/20 border-accent-blue text-accent-blue' : 'bg-white/5 border-white/10 text-text-muted hover:border-white/30'
+                }`}
+              >
+                {role}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="flex items-center gap-4 px-2">
           <div className="w-10 h-10 rounded-xl bg-bg-surface-elevated border border-border-soft flex items-center justify-center shadow-inner">
             <UserIcon className="w-5 h-5 text-text-secondary" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-xs font-black text-text-primary truncate">{MOCK_USERS.find(u => u.role === userRole)?.name}</span>
+            <span className="text-xs font-black text-text-primary truncate font-serif italic tracking-tighter">{MOCK_USERS.find(u => u.role === userRole)?.name}</span>
             <span className="text-[9px] text-accent-cyan font-black uppercase tracking-widest truncate">{userRole}</span>
           </div>
         </div>
@@ -157,7 +184,7 @@ export default function App() {
 
   return (
     <div className="flex h-screen bg-bg-main text-text-primary font-sans selection:bg-accent-blue selection:text-white overflow-hidden">
-      <Sidebar currentView={view} setView={setView} userRole={role} />
+      <Sidebar currentView={view} setView={setView} userRole={role} setUserRole={setRole} />
       
       <main className="flex-1 overflow-hidden relative flex flex-col">
         {/* Top Command Bar */}

@@ -3,13 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
-import { BrainCircuit, Zap, TrendingUp, Target, BarChart3, ChevronRight, Activity, Cpu } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { BrainCircuit, Zap, TrendingUp, Target, BarChart3, ChevronRight, Activity, Cpu, X } from 'lucide-react';
 
 const PortfolioIntelligence: React.FC = () => {
-  const insights = [
+  const [activeInsights, setActiveInsights] = useState([
     {
+      id: 1,
       title: "Archetype Expansion: Solar Maintenance Protocol",
       description: "Analysis of 12 recent industrial bids suggests a 22% gap in preventative solar panel health monitoring apps.",
       type: "OPPORTUNITY",
@@ -17,13 +18,18 @@ const PortfolioIntelligence: React.FC = () => {
       growthIndex: "+45%"
     },
     {
+      id: 2,
       title: "Portfolio Risk: Legal Tech Concentration",
       description: "65% of your blueprints are in one niche. Consider diversifying into Logistics or AgTech to reduce category risk.",
       type: "RISK",
       impact: "MEDIUM",
       growthIndex: "-12%"
     }
-  ];
+  ]);
+
+  const dismissInsight = (id: number) => {
+    setActiveInsights(prev => prev.filter(i => i.id !== id));
+  };
 
   return (
     <div className="space-y-10 animate-in fade-in duration-700">
@@ -89,42 +95,69 @@ const PortfolioIntelligence: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-           {insights.map((insight, i) => (
-             <div key={i} className="p-8 bg-bg-surface border border-border-soft rounded-[2.5rem] flex gap-8 hover:border-white/10 transition-all cursor-pointer group shadow-xl relative overflow-hidden active:scale-[0.99]">
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                   {insight.type === 'OPPORTUNITY' ? <Target className="w-24 h-24" /> : <BarChart3 className="w-24 h-24" />}
-                </div>
-                
-                <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center shrink-0 border shadow-inner ${
-                  insight.type === 'OPPORTUNITY' ? 'bg-accent-blue/10 border-accent-blue/20 text-accent-blue' : 'bg-bg-surface-elevated border-border-soft text-text-muted'
-                }`}>
-                   {insight.type === 'OPPORTUNITY' ? <Target className="w-8 h-8" /> : <BarChart3 className="w-8 h-8" />}
-                </div>
-                
-                <div className="space-y-4 relative z-10 flex-1">
-                   <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                         <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${
-                           insight.impact === 'HIGH' ? 'text-accent-red' : 'text-accent-amber'
-                         }`}>{insight.impact} IMPACT</span>
-                         <span className="text-white/10 shrink-0">/</span>
-                         <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">{insight.type}</span>
-                      </div>
-                      <span className={`text-[10px] font-black font-mono ${insight.growthIndex.startsWith('+') ? 'text-accent-emerald' : 'text-accent-red'}`}>
-                         {insight.growthIndex}
-                      </span>
-                   </div>
-                   
-                   <h4 className="text-xl font-black text-text-primary tracking-tight uppercase tracking-widest group-hover:text-accent-blue transition-colors italic leading-snug">{insight.title}</h4>
-                   <p className="text-sm text-text-secondary leading-relaxed font-serif italic">{insight.description}</p>
-                   
-                   <div className="pt-4 flex items-center gap-3">
-                      <div className="px-3 py-1 bg-bg-surface-elevated border border-border-soft rounded-full text-[9px] font-black text-text-muted uppercase tracking-widest">Priority Index: 0.92</div>
-                      <div className="px-3 py-1 bg-bg-surface-elevated border border-border-soft rounded-full text-[9px] font-black text-text-muted uppercase tracking-widest">System Lock Ready</div>
-                   </div>
-                </div>
+           <AnimatePresence>
+            {activeInsights.map((insight) => (
+              <motion.div 
+                key={insight.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95, x: 20 }}
+                className="p-8 bg-bg-surface border border-border-soft rounded-[2.5rem] flex gap-8 hover:border-white/10 transition-all cursor-pointer group shadow-xl relative overflow-hidden active:scale-[0.99]"
+              >
+                  <div className="absolute top-0 right-0 p-8 opacity-5">
+                    {insight.type === 'OPPORTUNITY' ? <Target className="w-24 h-24" /> : <BarChart3 className="w-24 h-24" />}
+                  </div>
+                  
+                  <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center shrink-0 border shadow-inner ${
+                    insight.type === 'OPPORTUNITY' ? 'bg-accent-blue/10 border-accent-blue/20 text-accent-blue' : 'bg-bg-surface-elevated border-border-soft text-text-muted'
+                  }`}>
+                    {insight.type === 'OPPORTUNITY' ? <Target className="w-8 h-8" /> : <BarChart3 className="w-8 h-8" />}
+                  </div>
+                  
+                  <div className="space-y-4 relative z-10 flex-1">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${
+                            insight.impact === 'HIGH' ? 'text-accent-red' : 'text-accent-amber'
+                          }`}>{insight.impact} IMPACT</span>
+                          <span className="text-white/10 shrink-0">/</span>
+                          <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em]">{insight.type}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className={`text-[10px] font-black font-mono ${insight.growthIndex.startsWith('+') ? 'text-accent-emerald' : 'text-accent-red'}`}>
+                            {insight.growthIndex}
+                          </span>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); dismissInsight(insight.id); }}
+                            className="w-8 h-8 bg-white/5 border border-white/5 rounded-lg flex items-center justify-center text-text-muted hover:text-accent-red transition-all"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                    </div>
+                    
+                    <h4 className="text-xl font-black text-text-primary tracking-tight uppercase tracking-widest group-hover:text-accent-blue transition-colors italic leading-snug">{insight.title}</h4>
+                    <p className="text-sm text-text-secondary leading-relaxed font-serif italic">{insight.description}</p>
+                    
+                    <div className="pt-4 flex items-center gap-3 overflow-hidden">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); dismissInsight(insight.id); }}
+                          className="px-4 py-2 bg-accent-blue text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-accent-blue/90 shadow-xl transition-all"
+                        >
+                           EXECUTE PROTOCOL
+                        </button>
+                        <div className="px-3 py-1 bg-bg-surface-elevated border border-border-soft rounded-full text-[9px] font-black text-text-muted uppercase tracking-widest">Priority Index: 0.92</div>
+                    </div>
+                  </div>
+              </motion.div>
+            ))}
+           </AnimatePresence>
+           {activeInsights.length === 0 && (
+             <div className="col-span-full py-12 text-center border-2 border-dashed border-border-soft rounded-[2.5rem]">
+                <p className="text-text-muted font-serif italic">Strategic queue cleared. Monitoring neural signals for new opportunities...</p>
              </div>
-           ))}
+           )}
         </div>
       </div>
     </div>

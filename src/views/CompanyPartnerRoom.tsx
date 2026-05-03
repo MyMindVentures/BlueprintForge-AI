@@ -11,6 +11,16 @@ import { MOCK_BIDS } from '../mockData';
 const CompanyPartnerRoom: React.FC = () => {
   const [hasAcceptedConfidentiality, setHasAcceptedConfidentiality] = useState(false);
   const [bidAmount, setBidAmount] = useState('15000');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  const handleSubmitBid = () => {
+    setIsSubmitting(true);
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setHasSubmitted(true);
+    }, 2000);
+  };
 
   if (!hasAcceptedConfidentiality) {
     return (
@@ -160,8 +170,13 @@ const CompanyPartnerRoom: React.FC = () => {
                     />
                  </div>
 
-                 <button className="w-full py-5 bg-accent-blue text-white font-black rounded-2xl hover:bg-accent-blue/90 transition-all shadow-xl shadow-accent-blue/20 active:scale-95 uppercase tracking-widest text-xs">
-                    SUBMIT PARTNER BID
+                 <button 
+                   onClick={handleSubmitBid}
+                   disabled={isSubmitting}
+                   className="w-full py-5 bg-accent-blue text-white font-black rounded-2xl hover:bg-accent-blue/90 transition-all shadow-xl shadow-accent-blue/20 active:scale-95 uppercase tracking-widest text-xs flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                 >
+                    {isSubmitting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Gavel className="w-4 h-4" />}
+                    {isSubmitting ? 'ENCRYPTING BID...' : 'SUBMIT PARTNER BID'}
                  </button>
               </div>
 
@@ -198,8 +213,51 @@ const CompanyPartnerRoom: React.FC = () => {
            </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {hasSubmitted && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-6 bg-bg-main/90 backdrop-blur-3xl">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full max-w-xl bg-bg-surface border border-border-soft rounded-[3.5rem] p-16 text-center space-y-12 shadow-2xl relative overflow-hidden"
+            >
+               <div className="absolute -top-20 -right-20 opacity-5 pointer-events-none">
+                  <ShieldCheck className="w-96 h-96 text-accent-emerald" />
+               </div>
+               
+               <div className="space-y-8 relative z-10">
+                  <div className="w-28 h-28 bg-accent-emerald/20 rounded-[2.5rem] flex items-center justify-center mx-auto shadow-[0_0_50px_rgba(16,185,129,0.3)]">
+                     <ShieldCheck className="w-14 h-14 text-accent-emerald" />
+                  </div>
+                  <div className="space-y-3">
+                    <h2 className="text-5xl font-black italic font-serif text-text-primary tracking-tighter uppercase leading-none">Bid Vaulted</h2>
+                    <p className="text-text-muted text-[10px] uppercase tracking-[0.4em] font-black">Encrypted Sequence Hash: 0x882...CF92</p>
+                  </div>
+               </div>
+
+               <div className="p-10 bg-bg-surface-elevated border border-border-soft rounded-[2.5rem] shadow-inner font-serif italic text-text-secondary text-lg leading-relaxed">
+                  "Your commitment for $15,000 has been securely hashed into the project's consensus layer. The Architect will review your strategic alignment within the next 48 hours."
+               </div>
+
+               <div className="flex flex-col gap-4 relative z-10">
+                  <button 
+                    onClick={() => setHasSubmitted(false)}
+                    className="w-full py-6 bg-accent-blue text-white text-[10px] font-black rounded-2xl shadow-xl shadow-accent-blue/30 hover:bg-accent-blue/90 transition-all uppercase tracking-widest active:scale-95"
+                  >
+                    RETURN TO DEAL ROOM
+                  </button>
+               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
+
+const RefreshCw = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+);
 
 export default CompanyPartnerRoom;
