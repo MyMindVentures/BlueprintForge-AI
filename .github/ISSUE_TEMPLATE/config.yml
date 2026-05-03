@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Builder Challenge Guide
+    url: https://github.com/MyMindVentures/BlueprintForge-AI/blob/main/docs/BUILDER_CHALLENGE.md
+    about: Read the challenge guide before picking an issue.
+  - name: Product Vision
+    url: https://github.com/MyMindVentures/BlueprintForge-AI/blob/main/docs/PRODUCT_VISION.md
+    about: Understand the full BlueprintForge AI vision.
+  - name: UI Design Direction
+    url: https://github.com/MyMindVentures/BlueprintForge-AI/blob/main/docs/UI_DESIGN_DIRECTION.md
+    about: Follow the premium dark high-tech UI direction.
