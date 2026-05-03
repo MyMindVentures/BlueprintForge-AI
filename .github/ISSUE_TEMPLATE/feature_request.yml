@@ -1,0 +1,48 @@
+name: Feature Request
+about: Suggest a new feature for BlueprintForge AI
+labels: [feature]
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Opportunity
+      description: What problem does this feature solve?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: What should be built?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Product Area
+      options:
+        - Premium UI Shell
+        - AI Product Architect
+        - Object Documentation Canvas
+        - Builder Build Pack
+        - Company Bid Room
+        - Revenue Recoupment
+        - Competitive Intelligence
+        - Protected Access & Evidence
+        - Creator/Builder Profiles
+        - Deployment
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      placeholder: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+        - [ ] Criteria 3
+    validations:
+      required: true
